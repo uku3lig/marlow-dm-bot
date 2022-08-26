@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "io.freefair.lombok" version "6.5.0.3"
+}
+
+group 'net.uku3lig'
+version '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("net.dv8tion:JDA:5.0.0-alpha.17") {
+        exclude module: 'opus-java'
+    }
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha7'
+    implementation 'ch.qos.logback:logback-classic:1.3.0-alpha16'
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'org.hibernate.orm:hibernate-core:6.1.2.Final'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// use 'gradle --console plain run' to run
+application {
+    mainClass = 'net.uku3lig.ukubot.Main'
+}
