@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 
 @Slf4j
 public class Main {
-    private static final Path TOKEN_PATH = Path.of("./MARLOWBOT_TOKEN");
-    private static final Path DB_PATH = Path.of("./marlowbot.db");
+    public static final Path TOKEN_PATH = Path.of("./MARLOWBOT_TOKEN");
+    public static final Path DB_PATH = Path.of("./marlowbot.db");
     private static final Set<Consumer<JDA>> consumers = new HashSet<>();
 
     @Getter

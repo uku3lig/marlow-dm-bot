@@ -7,6 +7,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.time.Duration;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class ClassScanner {
+    private static final String PKG = "net.uku3lig";
+
     private ClassScanner() {}
 
     /**
@@ -27,8 +30,8 @@ public class ClassScanner {
      */
     public static <T> Set<T> findSubtypes(Class<T> parent) {
         return new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage("net.uku3lig"))
-                .filterInputsBy(new FilterBuilder().includePackage("net.uku3lig"))
+                .setUrls(ClasspathHelper.forPackage(PKG))
+                .filterInputsBy(new FilterBuilder().includePackage(PKG))
                 .setScanners(Scanners.SubTypes))
                 .getSubTypesOf(parent).parallelStream()
                 .filter(klass -> !(klass.isInterface() || Modifier.isAbstract(klass.getModifiers())))
@@ -50,6 +53,14 @@ public class ClassScanner {
                     }
                 }).filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+    }
+
+    public static Set<Class<?>> findAnnotated(Class<? extends Annotation> annotation) {
+        return new Reflections(new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forPackage(PKG))
+                .filterInputsBy(new FilterBuilder().includePackage(PKG)))
+                //.setScanners(new TypeAnnotationsScanner()))
+                .getTypesAnnotatedWith(annotation);
     }
 
     private static <T> Constructor<? extends T> getConstructor(Class<? extends T> klass) throws NoSuchMethodException {
