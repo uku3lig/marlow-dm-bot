@@ -27,5 +27,5 @@ tasks.withType(JavaCompile) {
 
 // use 'gradle --console plain run' to run
 application {
-    mainClass = 'net.uku3lig.ukubot.Main'
+    mainClass = 'net.uku3lig.marlowbot.Main'
 }
