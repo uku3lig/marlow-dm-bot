@@ -1,7 +1,6 @@
 package net.uku3lig.marlowbot.util;
 
 import jakarta.persistence.Entity;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.uku3lig.marlowbot.Main;
 import org.hibernate.SessionFactory;
@@ -18,11 +17,14 @@ import java.util.Optional;
 
 @Slf4j
 public class Database {
-    @Getter
-    private static final Database instance = new Database();
-    private SessionFactory factory;
+    private static SessionFactory factory;
 
-    private Database() {
+    private static SessionFactory getFactory() {
+        if (factory == null) factory = createSessionFactory();
+        return factory;
+    }
+
+    private static SessionFactory createSessionFactory() {
         try {
             if (!Files.exists(Main.DB_PATH)) Files.createFile(Main.DB_PATH);
 
@@ -31,12 +33,13 @@ public class Database {
             ClassScanner.findAnnotated(Entity.class).forEach(cfg::addAnnotatedClass);
 
             final ServiceRegistry registry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-            factory = cfg.buildSessionFactory(registry);
+            return cfg.buildSessionFactory(registry);
         } catch (Exception e) {
             log.error("Execption encountered while trying to read start db connection");
             e.printStackTrace();
             System.exit(1);
         }
+        return null;
     }
 
     /**
@@ -62,9 +65,9 @@ public class Database {
      * @return <code>true</code> if nothing was wrong.
      */
     @SafeVarargs
-    public final <T> boolean saveOrUpdate(T... entities) {
+    public static <T> boolean saveOrUpdate(T... entities) {
         if (entities.length == 0 || !isEntity(entities[0])) return false;
-        try (var s = factory.openSession()) {
+        try (var s = getFactory().openSession()) {
             s.beginTransaction();
             Arrays.stream(entities).forEach(s::merge);
             s.getTransaction().commit();
@@ -83,9 +86,9 @@ public class Database {
      * @return <code>true</code> if nothing was wrong.
      */
     @SafeVarargs
-    public final <T> boolean delete(T... entities) {
+    public static <T> boolean delete(T... entities) {
         if (entities.length == 0 || !isEntity(entities[0])) return false;
-        try (var s = factory.openSession()) {
+        try (var s = getFactory().openSession()) {
             s.beginTransaction();
             Arrays.stream(entities).forEach(s::remove);
             s.getTransaction().commit();
@@ -104,9 +107,9 @@ public class Database {
      * @param <T> The type of the entity.
      * @return An optional containing the object found in database.
      */
-    public <T> Optional<T> getById(Class<T> klass, Serializable id) {
+    public static <T> Optional<T> getById(Class<T> klass, Serializable id) {
         if (!isEntity(klass)) return Optional.empty();
-        try (var s = factory.openSession()) {
+        try (var s = getFactory().openSession()) {
             s.beginTransaction();
             Optional<T> o = Optional.ofNullable(s.get(klass, id));
             s.getTransaction().commit();
@@ -125,10 +128,12 @@ public class Database {
      * @param <T> The type of the class.
      * @return A collection of the found entities, can be empty.
      */
-    public <T> Collection<T> getAll(Class<T> klass) {
+    public static <T> Collection<T> getAll(Class<T> klass) {
         if (!isEntity(klass)) return Collections.emptySet();
-        try (var s = factory.openSession()) {
+        try (var s = getFactory().openSession()) {
             return s.createQuery("SELECT a FROM " + klass.getSimpleName() + " a", klass).getResultList();
         }
     }
+
+    private Database() {}
 }
