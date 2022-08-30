@@ -42,7 +42,7 @@ public class AcceptButton implements IButton {
 
         category.createTextChannel(tag).addMemberPermissionOverride(id, EnumSet.of(Permission.VIEW_CHANNEL), EnumSet.noneOf(Permission.class))
                 .flatMap(c -> c.sendMessage(Util.mention(id) + " " + Util.mention(event.getGuild().getOwnerIdLong())).setEmbeds(builder.build()))
-                .flatMap(m -> event.editMessageEmbeds(builder.setDescription(m.getChannel().getAsMention()).build()))
+                .flatMap(m -> event.editMessageEmbeds(builder.setDescription(m.getChannel().getAsMention()).build()).setActionRows())
                 .queue();
     }
 }
