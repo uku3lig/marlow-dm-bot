@@ -18,12 +18,21 @@ import net.uku3lig.marlowbot.Main;
 import net.uku3lig.marlowbot.core.IButton;
 import net.uku3lig.marlowbot.core.ICommand;
 import net.uku3lig.marlowbot.core.IModal;
-import net.uku3lig.marlowbot.util.entities.Config;
 import net.uku3lig.marlowbot.util.Database;
+import net.uku3lig.marlowbot.util.entities.Config;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class OpenRequestsCommand implements ICommand, IButton, IModal {
+    private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private static final Map<Long, Instant> delayed = new HashMap<>();
+
     @Override
     public CommandData getCommandData() {
         return Commands.slash("openrequests", "opens requests in the current channel")
@@ -60,7 +69,14 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
-        event.replyModal(getModal()).queue();
+        long id = event.getUser().getIdLong();
+        if (delayed.containsKey(id)) {
+            event.replyFormat("You are on cooldown. You can open an inquiry again <t:%d:R>.", delayed.get(id).getEpochSecond()).setEphemeral(true).queue();
+        } else {
+            delayed.put(id, Instant.now().plus(2, ChronoUnit.DAYS));
+            executor.schedule(() -> delayed.remove(id), 2, TimeUnit.DAYS);
+            event.replyModal(getModal()).queue();
+        }
     }
 
     @Override
