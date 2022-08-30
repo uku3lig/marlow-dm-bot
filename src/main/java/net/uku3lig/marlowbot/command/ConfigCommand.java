@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.uku3lig.marlowbot.core.ICommand;
-import net.uku3lig.marlowbot.util.Config;
+import net.uku3lig.marlowbot.util.entities.Config;
 import net.uku3lig.marlowbot.util.Database;
 
 import java.util.Objects;

@@ -18,7 +18,7 @@ import net.uku3lig.marlowbot.Main;
 import net.uku3lig.marlowbot.core.IButton;
 import net.uku3lig.marlowbot.core.ICommand;
 import net.uku3lig.marlowbot.core.IModal;
-import net.uku3lig.marlowbot.util.Config;
+import net.uku3lig.marlowbot.util.entities.Config;
 import net.uku3lig.marlowbot.util.Database;
 
 import java.time.Instant;

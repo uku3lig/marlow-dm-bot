@@ -1,4 +1,4 @@
-package net.uku3lig.marlowbot.util;
+package net.uku3lig.marlowbot.util.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
