@@ -73,8 +73,8 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
         if (delayed.containsKey(id)) {
             event.replyFormat("You are on cooldown. You can open an inquiry again <t:%d:R>.", delayed.get(id).getEpochSecond()).setEphemeral(true).queue();
         } else {
-            delayed.put(id, Instant.now().plus(2, ChronoUnit.DAYS));
-            executor.schedule(() -> delayed.remove(id), 2, TimeUnit.DAYS);
+            delayed.put(id, Instant.now().plus(1, ChronoUnit.DAYS));
+            executor.schedule(() -> delayed.remove(id), 1, TimeUnit.DAYS);
             event.replyModal(getModal()).queue();
         }
     }
