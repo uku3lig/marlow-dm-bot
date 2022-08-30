@@ -95,9 +95,8 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
                 .forEach(m -> builder.addField(m.getId(), m.getAsString(), false));
 
         channel.sendMessageEmbeds(builder.build())
-                //.setActionRow(new AcceptButton().getButton(), new RejectButton().getButton()) TODO
+                .setActionRow(new AcceptButton().getButton(), new RejectButton().getButton())
                 .flatMap(m -> event.reply("Thanks for your submission. You will receive a reply shortly.").setEphemeral(true))
                 .queue();
-
     }
 }
