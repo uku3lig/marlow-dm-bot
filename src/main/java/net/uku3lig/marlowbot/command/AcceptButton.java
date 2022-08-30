@@ -18,7 +18,7 @@ import java.util.Optional;
 public class AcceptButton implements IButton {
     @Override
     public Button getButton() {
-        return Button.success("mod_accept", "Accept Mod");
+        return Button.success("accept", "Accept");
     }
 
     @Override
