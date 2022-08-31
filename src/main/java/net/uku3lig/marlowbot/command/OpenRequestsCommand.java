@@ -53,7 +53,7 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setTitle("Click the button below to contact Marlow")
-                .setColor(0xFFfe88ff)
+                .setColor(Main.EMBED_COLOR)
                 .setFooter("marlowbot by uku#1880");
 
         channel.sendMessageEmbeds(builder.build())

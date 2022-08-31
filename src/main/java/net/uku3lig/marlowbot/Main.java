@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 public class Main {
     public static final Path TOKEN_PATH = Path.of("./MARLOWBOT_TOKEN");
     public static final Path DB_PATH = Path.of("./marlowbot.db");
+    public static final int EMBED_COLOR = 0xfffe88ff;
     private static final Set<Consumer<JDA>> consumers = new HashSet<>();
 
     @Getter
