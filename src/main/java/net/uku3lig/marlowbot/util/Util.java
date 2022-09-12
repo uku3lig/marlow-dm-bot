@@ -23,6 +23,7 @@ public class Util {
         return getUser(event.getHook())
                 .flatMap(User::openPrivateChannel)
                 .flatMap(c -> c.sendMessageFormat("Your contact request was rejected. %s", reason))
+                .onErrorMap(t -> null)
                 .flatMap(m -> event.getHook().sendMessageFormat("Contact request rejected.").setEphemeral(true));
     }
 

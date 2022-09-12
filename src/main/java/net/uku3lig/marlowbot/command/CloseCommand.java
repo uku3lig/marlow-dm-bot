@@ -76,6 +76,7 @@ public class CloseCommand implements ICommand, IButton {
         // send dm to user
         return user.openPrivateChannel()
                 .flatMap(c -> c.sendMessage("Your ticket has been closed. Reason: " + reason))
+                .onErrorMap(t -> null)
                 // edit original embed
                 .map(m -> {
                     Config config = Database.getById(Config.class, channel.getGuild().getId()).orElse(new Config(channel.getGuild()));
