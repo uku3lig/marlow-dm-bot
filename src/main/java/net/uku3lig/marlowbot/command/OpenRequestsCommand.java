@@ -73,8 +73,6 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
         if (delayed.containsKey(id)) {
             event.replyFormat("You are on cooldown. You can open an inquiry again <t:%d:R>.", delayed.get(id).getEpochSecond()).setEphemeral(true).queue();
         } else {
-            delayed.put(id, Instant.now().plus(1, ChronoUnit.DAYS));
-            executor.schedule(() -> delayed.remove(id), 1, TimeUnit.DAYS);
             event.replyModal(getModal()).queue();
         }
     }
@@ -93,6 +91,10 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
     @Override
     public void onModal(ModalInteractionEvent event) {
         if (event.getGuild() == null) return;
+
+        long id = event.getUser().getIdLong();
+        delayed.put(id, Instant.now().plus(1, ChronoUnit.DAYS));
+        executor.schedule(() -> delayed.remove(id), 1, TimeUnit.DAYS);
 
         Config config = Database.getById(Config.class, event.getGuild().getId()).orElse(new Config(event.getGuild()));
         TextChannel channel = Main.getJda().getTextChannelById(config.getRequestsChannel());
